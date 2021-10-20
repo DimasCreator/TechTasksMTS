@@ -13,21 +13,31 @@ namespace Tasks
     {
         public static void Task()
         {
-            var consoleStandartOut = Console.Out;
-            
             TransformToElephant();
             Console.WriteLine("Муха");
-
             //Next code
-            Console.SetOut(consoleStandartOut);
             Console.WriteLine("Next");
         }
 
         static void TransformToElephant()
         {
-            Console.WriteLine("Слон");
-            var consoleNewOut = new StringWriter();
-            Console.SetOut(consoleNewOut);
+            Console.SetOut(new InterceptWriter());
+        }
+
+        class InterceptWriter : StringWriter
+        {
+            private readonly TextWriter _mainOut;
+
+            public InterceptWriter()
+            {
+                _mainOut = Console.Out;
+            }
+
+            public override void WriteLine(string str)
+            {
+                Console.SetOut(_mainOut);
+                Console.WriteLine("Слон");
+            }
         }
     }
 }
